@@ -7,6 +7,12 @@
 (def budget-json-file "/tmp/budget.json")
 (def categories-json-file "/tmp/categories.json")
 
+(defn all-data
+  []
+  {:categories (read-categories)
+   :budget (read-budget)
+   :ledger (read-ledger)})
+
 (defn read-ledger
   []
   (parse-stream (io/reader ledger-json-file)))

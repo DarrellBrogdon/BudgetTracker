@@ -20,8 +20,8 @@
   (context "/api/1.0" []
     (GET "/" []
       {:status 200
-       :headers {"Content-Type" "text/html"}
-       :body "<h1>API Server</h1>"})
+       :headers {"Content-Type" "application/json"}
+       :body (json/generate-string (data/all-data))})
     (GET "/ledger" []
       {:status 200
        :headers {"Content-Type" "application/json"}
