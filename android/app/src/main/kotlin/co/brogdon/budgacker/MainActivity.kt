@@ -1,4 +1,4 @@
-package co.brogdon.budgacker
+package co.brogdon.budgettracker
 
 import io.flutter.embedding.android.FlutterActivity
 

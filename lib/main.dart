@@ -15,7 +15,7 @@ class Budgetrack extends StatelessWidget {
     return MaterialApp(
       title: 'Budgetrack',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const Home(title: 'Budgetrack'),
+      home: const Home(title: 'BudgetTracker'),
     );
   }
 }
