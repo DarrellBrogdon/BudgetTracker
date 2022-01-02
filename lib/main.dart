@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'api_data.dart';
+import 'home.dart';
 
 void main() {
-  runApp(const Budgetrack());
+  runApp(const BudgetTracker());
 }
 
-class Budgetrack extends StatelessWidget {
-  const Budgetrack({Key? key}) : super(key: key);
+class BudgetTracker extends StatelessWidget {
+  const BudgetTracker({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,91 +14,6 @@ class Budgetrack extends StatelessWidget {
       title: 'Budgetrack',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const Home(title: 'BudgetTracker'),
-    );
-  }
-}
-
-class Home extends StatefulWidget {
-  const Home({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  late Future<APIData> jsonData;
-  final formatCurrency = NumberFormat.simpleCurrency();
-
-  @override
-  void initState() {
-    super.initState();
-    jsonData = fetchData();
-  }
-
-  Future<APIData> fetchData() async {
-    final response =
-        await http.get(Uri.parse('http://localhost:8000/api/1.0/'));
-
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
-      return APIData.fromJson(jsonData);
-    } else {
-      throw Exception('Failed to load the categories');
-    }
-  }
-
-  FutureBuilder<APIData> _budgetList() {
-    return FutureBuilder<APIData>(
-      future: jsonData,
-      builder: (BuildContext context, AsyncSnapshot<APIData> snapshot) {
-        if (snapshot.hasData) {
-          return Table(
-            columnWidths: const {
-              0: FlexColumnWidth(2),
-              1: FlexColumnWidth(1),
-            },
-            children:
-                buildRows(snapshot.data!.categories, snapshot.data!.budget),
-          );
-        } else if (snapshot.hasError) {
-          return Text('ERROR: ${snapshot.error}');
-        }
-
-        return const CircularProgressIndicator();
-      },
-    );
-  }
-
-  List<TableRow> buildRows(List<Category> categories, List<Budget> budget) {
-    List<TableRow> tableRows = [];
-
-    for (var category in categories) {
-      var budgetValue = 0.0;
-      for (var b in budget) {
-        if (b.category == category.key) {
-          budgetValue = b.amount;
-        }
-      }
-
-      tableRows.add(
-        TableRow(children: [
-          TableCell(child: Text(category.category)),
-          TableCell(child: Text(formatCurrency.format(budgetValue))),
-        ]),
-      );
-    }
-
-    return tableRows;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: _budgetList(),
     );
   }
 }
